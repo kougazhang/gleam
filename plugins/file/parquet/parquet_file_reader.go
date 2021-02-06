@@ -3,9 +3,9 @@ package parquet
 import (
 	"github.com/chrislusf/gleam/filesystem"
 	"github.com/chrislusf/gleam/util"
-	. "github.com/xitongsys/parquet-go/source"
 	. "github.com/xitongsys/parquet-go/reader"
-	. "github.com/xitongsys/parquet-go/types"
+	. "github.com/xitongsys/parquet-go/source"
+	_ "github.com/xitongsys/parquet-go/types"
 	"io"
 )
 
@@ -67,13 +67,13 @@ func (self *ParquetFileReader) Read() (row *util.Row, err error) {
 		return nil, io.EOF
 	}
 	objects := make([]interface{}, 0)
-	for _, fieldName := range self.pqReader.SchemaHandler.ValueColumns {
-		schemaIndex := self.pqReader.SchemaHandler.MapIndex[fieldName]
-		values, _, _, _ := self.pqReader.ReadColumnByPath(fieldName, 1)
-		objects = append(objects, ParquetTypeToGoType(values[0],
-			self.pqReader.SchemaHandler.SchemaElements[schemaIndex].Type,
-			self.pqReader.SchemaHandler.SchemaElements[schemaIndex].ConvertedType,
-		))
+	for _ = range self.pqReader.SchemaHandler.ValueColumns {
+		//schemaIndex := self.pqReader.SchemaHandler.MapIndex[fieldName]
+		//values, _, _, _ := self.pqReader.ReadColumnByPath(fieldName, 1)
+		//objects = append(objects, ParquetTypeToGoType(values[0],
+		//	self.pqReader.SchemaHandler.SchemaElements[schemaIndex].Type,
+		//	self.pqReader.SchemaHandler.SchemaElements[schemaIndex].ConvertedType,
+		//))
 	}
 	self.Cursor++
 	return util.NewRow(util.Now(), objects...), nil
